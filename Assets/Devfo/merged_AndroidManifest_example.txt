@@ -1,0 +1,67 @@
+If you are using another android plugin that contains a AndroidManifest.xml file, then read this....
+
+You will need to manually merge the AndroidManifext.xml files together. Some plugins come with a
+function that will try to merge/build the manifest for you (such as Prime31), however these functions
+to not take in consideration the way other plugins work and will break your code. 
+The most important thing to remember is to NOT OVERRIDE the activity "com.unity3d.player.UnityPlayerProxyActivity".
+The 2nd most important thing-- You can only have ONE MAIN Launcher. The intent filter(below) can ONLY appear once in your manifest:
+	<intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+    </intent-filter>
+
+Our most asked question is how to merge our mainfest with Prime31, so here is an example. Below is a sucessfully merged manifest that will work with Android Native and Prime31 Etcetera plugin:
+
+
+
+<?xml version="1.0" encoding="utf-8"?>
+<manifest
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.unity3d.player"
+	android:installLocation="preferExternal"
+	android:theme="@android:style/Theme.NoTitleBar"
+    android:versionCode="1"
+    android:versionName="1.0">
+    <supports-screens
+        android:smallScreens="true"
+        android:normalScreens="true"
+        android:largeScreens="true"
+        android:xlargeScreens="true"
+        android:anyDensity="true"/>
+
+    <application
+		android:icon="@drawable/app_icon"
+        android:label="@string/app_name"
+        android:debuggable="true">
+        <activity android:name="com.unity3d.player.UnityPlayerProxyActivity"
+                  android:launchMode="singleTask"
+                  android:label="@string/app_name"
+                  android:configChanges="fontScale|keyboard|keyboardHidden|locale|mnc|mcc|navigation|orientation|screenLayout|screenSize|smallestScreenSize|uiMode|touchscreen">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name="com.unity3d.player.UnityPlayerActivity"
+                  android:launchMode="singleTask"
+                  android:label="@string/app_name"
+                  android:configChanges="fontScale|keyboard|keyboardHidden|locale|mnc|mcc|navigation|orientation|screenLayout|screenSize|smallestScreenSize|uiMode|touchscreen">
+        </activity>
+        <activity android:name="com.unity3d.player.UnityPlayerNativeActivity"
+                  android:launchMode="singleTask"
+                  android:label="@string/app_name"
+                  android:configChanges="fontScale|keyboard|keyboardHidden|locale|mnc|mcc|navigation|orientation|screenLayout|screenSize|smallestScreenSize|uiMode|touchscreen">
+            <meta-data android:name="unityplayer.ForwardNativeEventsToDalvik" android:value="true" />
+        </activity>
+    
+		    <activity android:name="com.prime31.EtceteraProxyActivity"></activity>
+			<activity android:name="com.prime31.WebViewActivity" android:configChanges="orientation"></activity>
+			<activity android:name="com.prime31.P31VideoPlayerActivity" android:configChanges="keyboard|keyboardHidden|orientation"></activity>
+			<receiver android:name="com.prime31.AlarmManagerReceiver"></receiver>
+</application>
+
+	    <uses-permission android:name="android.permission.INTERNET"/>
+	    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+		<uses-permission android:name="android.permission.GET_TASKS"/>
+
+</manifest>

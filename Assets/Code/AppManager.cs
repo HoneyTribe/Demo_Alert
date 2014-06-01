@@ -8,23 +8,84 @@ public class AppManager : MonoBehaviour {
 
 	// Use this for initialization
 	public GameObject splashScreen;
-
+	public GameObject addContactScreen;
+	public GameObject mainScreen;
 	public ContactList contactList;
+	public ContactList phoneContactList;
 	public string phoneNumber;
 	public string message;
 	public AndroidSystemDemoMultipleScreens asd;
 	float timer = 0f;
 	float timerMax = 3f;
+	public List<string> retryList = new List<string>();
+	public GUIText output;
+
+	public AudioSource tap;
+	public AudioSource add;
+	public AudioSource delete;
+	public AudioSource close;
 	void Start () {
 		Input.location.Start();
-
+	
 	}
+
+
+
 	// Broadcast Receiver constants and variables
 	public void ShowMainScreen(){
 
 
 		TweenPosition.Begin (splashScreen,0.5f, new Vector3(splashScreen.transform.localPosition.x,2000,0));
 		contactList.PopulateContactList();
+		tap.Play();
+
+	}
+
+	public void AddToRetryList(string number){
+
+		retryList.Add (number);
+
+	}
+
+	public void GetAllContacts(){
+
+		ContactsHelper contactsHelper = new ContactsHelper();
+		string response = contactsHelper.GetAllContacts();
+
+	}
+
+	public void ShowAddContactScreen(){
+
+		tap.Play ();
+		TweenPosition.Begin (addContactScreen,0.3f, new Vector3(splashScreen.transform.localPosition.x,-67,0));
+		phoneContactList.ClearPhoneContactList();
+	//	phoneContactList.GetContactsFromPhone("d");
+		Invoke ("GetContacts",0.4f);
+
+	}
+
+	void GetContacts(){
+
+		ContactsHelper contactsHelper = new ContactsHelper();
+		string response = contactsHelper.GetAllContacts();
+		phoneContactList.GetContactsFromPhone(response);
+	}
+
+	public void ContactAdded(){
+
+		add.Play ();
+
+	}
+
+	public void ContactDeleted(){
+
+		delete.Play ();
+	}
+
+	public void HideAddContactScreen(){
+
+		TweenPosition.Begin (addContactScreen,0.15f, new Vector3(splashScreen.transform.localPosition.x,2000,0));
+		close.Play ();
 
 	}
 

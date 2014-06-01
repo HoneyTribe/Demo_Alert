@@ -1,0 +1,8 @@
+Version 1.1:
+	Initial release
+	
+Version 1.2:
+	Moved the Plugin folder to the Assets root folder.
+	Added Share functionality. This allows you to call a "Share" button to your app.
+	You can then share data with Facebook, email, texting apps, gallery, etc.
+	Includes new helper file: ShareHelper.cs
