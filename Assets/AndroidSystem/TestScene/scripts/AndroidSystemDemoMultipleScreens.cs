@@ -203,12 +203,16 @@ public class AndroidSystemDemoMultipleScreens : MonoBehaviour {
 		Telephony.SendSMS(myNumber, 
 		                  myMessage, 
 		                  (sentOK) => {
+
 			if (sentOK) {
 
-				
 				messageStatus = "SMS Sent successfully";
+
+				//cList.RemoveFromRetryList(myNumber);
+
 			} else {
 				messageStatus = "Failed to send SMS";
+				//cList.AddToRetryList(myNumber);
 			}
 		}, 
 		(deliveredOK) => {
@@ -219,6 +223,7 @@ public class AndroidSystemDemoMultipleScreens : MonoBehaviour {
 				messageStatus = "SMS not delivered";
 			}
 		});
+		Debug.Log ("MESSAGING : " + myNumber);
 		cList.ContactedSuccessfully(myNumber);
 	}
 

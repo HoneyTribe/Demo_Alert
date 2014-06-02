@@ -3,7 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using FourthSky.Android;
 using FourthSky.Android.Services;
-
+using Boomlagoon.JSON;
+using System.Text.RegularExpressions;
 public class AppManager : MonoBehaviour {
 
 	// Use this for initialization
@@ -17,15 +18,16 @@ public class AppManager : MonoBehaviour {
 	public AndroidSystemDemoMultipleScreens asd;
 	float timer = 0f;
 	float timerMax = 3f;
-	public List<string> retryList = new List<string>();
 	public GUIText output;
 
 	public AudioSource tap;
 	public AudioSource add;
 	public AudioSource delete;
 	public AudioSource close;
+	public string testJSON = "";
 	void Start () {
 		Input.location.Start();
+
 	
 	}
 
@@ -34,19 +36,12 @@ public class AppManager : MonoBehaviour {
 	// Broadcast Receiver constants and variables
 	public void ShowMainScreen(){
 
-
 		TweenPosition.Begin (splashScreen,0.5f, new Vector3(splashScreen.transform.localPosition.x,2000,0));
-		contactList.PopulateContactList();
+		contactList.CheckSavedContent();
 		tap.Play();
 
 	}
-
-	public void AddToRetryList(string number){
-
-		retryList.Add (number);
-
-	}
-
+	
 	public void GetAllContacts(){
 
 		ContactsHelper contactsHelper = new ContactsHelper();
@@ -97,9 +92,6 @@ public class AppManager : MonoBehaviour {
 			string newMessage = "Hi " + c.contactName + " " + message + ". I am at " + "LAT : " +  Input.location.lastData.latitude + " LONG : " + Input.location.lastData.longitude;
 			asd.CustomSendSMS(c.contactNumber, newMessage, contactList);
 		}
-
-
-
 		/*
 		//SINGLE USER TEST
 		string newMessage = "Hi " + "USER" + " " + message + ". I am at " + "LAT : " +  Input.location.lastData.latitude + " LONG : " + Input.location.lastData.longitude;
@@ -107,7 +99,12 @@ public class AppManager : MonoBehaviour {
 		*/
 
 	}
+	public void SendMessageToNumber(string num){
 
+		string newMessage = "Hi " + message + ". I am at " + "LAT : " +  Input.location.lastData.latitude + " LONG : " + Input.location.lastData.longitude;
+		asd.CustomSendSMS(num, newMessage, contactList);
+
+	}
 	// Update is called once per frame
 	void Update () {
 
